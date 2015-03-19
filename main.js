@@ -3,6 +3,7 @@ $(function(){
   var url = 'http://api.themoviedb.org/3/',
   mode = 'search/movie',
   baseIMG = 'https://image.tmdb.org/t/p/original/',
+  noPoster = "http://sensorpro.net/documents/dojo/noposter.png",
   input,
   movieName,
   key = '?api_key=61a82aca6630ae1cbc3635d8710c0fbe';
@@ -64,11 +65,11 @@ $(function(){
 
 
 
-            $('#info').append("<tr><td>"+data.results[i].title +' (' + data.results[i].release_date+')'+"</td></tr>");
+
             if(data.results[i].poster_path) {
-              $('#info').append("<tr><td><img style='width:300px; height:auto;' id='Poster' src="+baseIMG+ data.results[i].poster_path+"></td></tr>");
+              $('#info').append("<li><img style='width:300px; height:auto;' id='Poster' src='"+baseIMG+ data.results[i].poster_path+"'></li>");
             }else {
-              $("#info").append("No Picture Found?");
+              $("#info").append("<li><img id='Poster' style='width:300px; height:auto;' src='" + noPoster + "'/></li>");
             }
           }
         }
