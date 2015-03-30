@@ -1,49 +1,165 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-  <title>Movies Search</title>
-  <script src="jquery.min.js"></script>
-  <link rel="stylesheet" href="https://bootswatch.com/lumen/bootstrap.min.css">
-  <link rel="stylesheet" href="http://sensorpro.net/documents/dojo/responsivegrid.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-  <script src="main.js"></script>
+	<title>Dojo Movie Lookup Week 3</title>
+
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.3.min.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.2/lumen/bootstrap.min.css"/>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<link rel='stylesheet' href='http://sensorpro.net/documents/dojo/responsivegrid.css'>	
+	
+	<script>
+
+	    $(function() {
+			var url = 'http://api.themoviedb.org/3/',
+				modeMovie = 'search/movie',
+				modeActor = 'search/person',
+				input,
+				movieName,
+				actorName,
+				key = '?api_key=61a82aca6630ae1cbc3635d8710c0fbe';
+				
+			var imageBaseURL = 'https://image.tmdb.org/t/p/original/';
+			var noPoster = 'http://sensorpro.net/documents/dojo/noposter.png';
+
+			
+			$(document).ready(function(){
+				$('#searchterm1').keypress(function(e){
+				if(e.keyCode==13)
+					$('#searchmovie').click();
+				});
+			});
+
+			$(document).ready(function(){
+				$('#searchterm2').keypress(function(e){
+				if(e.keyCode==13)
+					$('#searchactor').click();
+				});
+			});
+			
+			$('#searchmovie').click(function() {
+				$('#info').html('');
+				var input = $('#searchterm1').val(),
+				movieName = encodeURI(input);
+
+				$.ajax({
+					url: url + modeMovie + key + '&query=' + movieName,
+					dataType: 'json',
+					success: function(data) {
+						if (data.total_results == 0)
+							alert('Movie not found');
+						else {
+							console.log(data);
+							for (i = 0; i < data.results.length; i++) {
+								 if (data.results[i].poster_path) {
+										$('#info').append('<li><img style="width:300px;height:auto;" id="Poster" src="' + imageBaseURL + data.results[i].poster_path + '"</li>');
+									} else {
+										$('#info').append('<li><img style="width:300px;height:auto;" id="Poster" src="' + noPoster + '"</li>');
+									}
+							}
+						}
+					}
+
+				});
+			});
+			
+			
+			$('#searchactor').click(function() {
+				$('#info').html('');
+				var input = $('#searchterm2').val(),
+				actorName = encodeURI(input);
+
+				$.ajax({
+					url: url + modeActor + key + '&query=' + actorName,
+					dataType: 'json',
+					success: function(data) {
+						if (data.total_results == 0)
+							alert('Actor not found');
+						else {
+							console.log(data);
+							for (i = 0; i < data.results.length; i++) {
+								 if (data.results[i].profile_path) {
+										$('#info').append('<li><img style="width:600px;height:auto;" id="Profile" src="' + imageBaseURL + data.results[i].profile_path + '"</li>');
+									} else {
+										$('#info').append('<li><img style="width:600px;height:auto;" id="Profile" src="' + noPoster + '"</li>');
+									}
+							}
+						}
+					}
+
+				});
+			});
+			
+		});
+	   
+	</script>
+	
 </head>
-<body class="container">
-  <div class="">
-    <div class="page-header" id="banner">
-    <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-8">
-          <h1>Movie Search</h1>
-          <p class="lead">Enter the name of a movie you want find!</p>
-        </div>
-      </div>
-      </div>
-    </div>
+
+<body>
 
 
-  <section id="fetch">
-    <div class="form-group">
-      <div class="input-group">
-        <input type="text" id="searchTerm" class="form-control" placeholder="movie name">
-        <span class="input-group-btn">
-          <button class="btn btn-primary" id="search">Search</button>
-        </span>
-      </div>
-    </div>
-  </section>
 
-  <div class="panel panel-info" id="results">
-    <div class="panel-heading">
-      <h3 class="panel-title">Results</h3>
-    </div>
-    <div class="panel-body pattern" id="pattern">
-      <ul class="g" id="info">
+<div class="container">
 
-      </ul>
-    </div>
-  </div>
-  </div>
+	<div class="page-header" id="banner">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<h1>Dojo Movie Lookup</h1>
+				<p class="lead">What do you want to look up?</p>
+			</div>
+		</div>
+	</div>
+
+	
+	
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#movie" data-toggle="tab">Movie Search</a></li>
+	  <li><a href="#actor" data-toggle="tab">Actor Search</a></li>
+	</ul>
+	<div id="myTabContent" class="tab-content">
+	  <div class="tab-pane fade active in" id="movie">
+		<section id="fetch">
+			<div class="form-group">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Enter a movie title" id="searchterm1" />
+						<span class="input-group-btn">
+							<button class="btn btn-primary" id="searchmovie">Find Movie</button>
+						</span>
+				</div>
+			</div>
+		</section>
+	  </div>
+	  <div class="tab-pane fade" id="actor">
+		<section id="fetch2">
+			<div class="form-group">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Enter an actor name" id="searchterm2" />
+						<span class="input-group-btn">
+							<button class="btn btn-primary" id="searchactor">Find Actor</button>
+						</span>
+				</div>
+			</div>
+		</section>
+	  </div>
+	</div>		
+	
+
+	<div class="panel panel-info" id="results">
+		<div class="panel-heading">
+			<h3 class="panel-title">Results</h3>
+		</div>
+	  	<div class="panel-body pattern" id="pattern">
+			<ul class="g" id="info">
+		
+			</ul>
+  	  </div>
+	</div>
+
+
+
+</div>
+
 </body>
 </html>
